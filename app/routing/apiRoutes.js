@@ -9,14 +9,26 @@ app.get("/api/friends", function(req, res) {
 });
 
 app.post("/api/friends", function(req, res) {
+  
   var newFriend = req.body;
+  var bestFriend = {};
+  var matchScore = 1000;
+  
+  // Loop through list of friends
+  for (var i of friendList) {
+    var diffScore = 0;
+    // Loop through the scores
+    for (var j = 0; j < newFriend.scores.length; j++) {
+      var rawDiffer = newFriend.scores[j] - i.scores[j];
+      diffScore += Math.abs(rawDiffer);
+    }
+    console.log(i.name + ": " + diffScore);
+    if (diffScore < matchScore) {
+      bestFriend = i;
+      matchScore = diffScore;
+    }
+  }
 
-  console.log(newFriend);
-
-  friendList.push(newFriend);
-
-  console.log(friendList);
-
-  res.json(newFriend);
+  res.json(bestFriend);
 });
 }
